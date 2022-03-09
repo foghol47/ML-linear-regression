@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from dataset_util import DatasetUtil
+import tensorflow as tf
 import time
 
 class PlotUtil():
@@ -8,10 +9,9 @@ class PlotUtil():
     def __init__(self):
         if PlotUtil.__instance != None:
             raise Exception('This class is a Singleton!')
-        self.fig , self.ax = plt.subplots(2) 
+        self.fig , self.ax = plt.subplots(1, 2, figsize=[10, 4.8]) 
         self.ax[0].set(xlim=(-120, 120), ylim=(-250, 250))
         self.lines = None    
-        plt.ion()
         self.fig.show()
         PlotUtil.__instance = self
     
@@ -32,13 +32,12 @@ class PlotUtil():
         if self.lines == None:
             self.lines = self.ax[0].plot(X, Y, c='r')
         self.lines[0].set_ydata(Y)   
-        self.fig.canvas.draw()
+        self.fig.canvas.draw_idle()
         self.fig.canvas.flush_events()
         
     def plot_cost(self, costs):
-
+        self.ax[1].set_xlabel('iterations')
+        self.ax[1].set_ylabel('cost')
         self.ax[1].plot([x+1 for x in range(len(costs))],costs)
         self.fig.canvas.draw()
-        self.fig.canvas.flush_events()
         
-        time.sleep(10)
