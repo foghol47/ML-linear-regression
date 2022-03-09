@@ -21,21 +21,29 @@ class PlotUtil():
             PlotUtil.__instance = PlotUtil()
         return PlotUtil.__instance    
     
-    def plot_data(self, X, Y):
+    def plot_data(self, X: list, Y: list):
         self.ax[0].scatter(X, Y, s=9,  c='k')
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
     
-    def plot_line(self, theta):
+    def animate_line(self, thetas: list, normalized=False):
+        for theta in thetas:
+            self.__plot_line(theta, normalized)
+
+
+    def __plot_line(self, theta: list, normalized: bool):
         X = [-100, 100]
-        Y = [theta[0] + (theta[1] * x) for x in DatasetUtil.normalize_data(X)]
+        if normalized:
+            Y = [theta[0] + (theta[1] * x) for x in DatasetUtil.normalize_data(X)]
+        else:
+            Y = [theta[0] + (theta[1] * x) for x in X]
         if self.lines == None:
             self.lines = self.ax[0].plot(X, Y, c='r')
         self.lines[0].set_ydata(Y)   
         self.fig.canvas.draw_idle()
         self.fig.canvas.flush_events()
         
-    def plot_cost(self, costs):
+    def plot_cost(self, costs: list):
         self.ax[1].set_xlabel('iterations')
         self.ax[1].set_ylabel('cost')
         self.ax[1].plot([x+1 for x in range(len(costs))],costs)

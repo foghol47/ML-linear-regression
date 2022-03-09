@@ -10,7 +10,7 @@ class DatasetUtil():
         Y = []
         for i in range(m):
             x = random.uniform(-100,100)
-            mu = (2 * x) + 50
+            mu = (5 * x) + 30
             y = random.gauss(mu, mu / 5)
             X.append(x)
             Y.append(y)
@@ -18,6 +18,6 @@ class DatasetUtil():
         return (X, Y)
 
     @staticmethod
-    def normalize_data(X):
+    def normalize_data(X: tf.Tensor):
         return (X - tf.reduce_min(X, axis=0)) / (tf.reduce_max(X, axis=0) - tf.reduce_min(X, axis=0))
    
