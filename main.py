@@ -29,7 +29,7 @@ def main():
     plot = PlotUtil.get_instance()
     plot.plot_data(X, Y)
     
-    X = DatasetUtil.normalize_data(tf.constant(X, shape=[m,n]))
+    X, minimum, range_of_data = DatasetUtil.normalize_data(tf.constant(X, shape=[m,n]))
     X = tf.concat([tf.ones([m, 1], dtype='float32'), X], axis=1)
     Y = tf.constant(tf.constant(Y, shape=[m,1]))
     theta = tf.Variable((tf.random.uniform((n+1, 1))))
@@ -39,7 +39,14 @@ def main():
     for theta in trainer.train(150, 3e-1):
         plot_function(X, Y, theta, iter_number)
         iter_number += 1
-
+    
+    x = int(input('enter your x:\n'))
+    new_x = DatasetUtil.normalize_with_parameters(x, minimum, range_of_data)
+    new_x = tf.concat([tf.ones([1, 1], dtype='float32'), tf.constant(new_x, shape=[1,n])], axis=1)
+    predict = trainer.h_theta(new_x, theta)
+    print('predict = ', predict.numpy())
+    plot.plot_data(x, predict.numpy(), 'g')
+    
     plt.show()
         
 if __name__ == '__main__':

@@ -25,15 +25,15 @@ class PlotUtil():
             PlotUtil.__instance = PlotUtil()
         return PlotUtil.__instance    
     
-    def plot_data(self, X: list, Y: list):
-        self.ax[0].scatter(X, Y, s=9,  c='k')
+    def plot_data(self, X: list, Y: list, color='k'):
+        self.ax[0].scatter(X, Y, s=9,  c=color)
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
 
     def plot_line(self, theta: list, normalized: bool):
         X = [-100, 100]
         if normalized:
-            Y = [theta[0] + (theta[1] * x) for x in DatasetUtil.normalize_data(X)]
+            Y = [theta[0] + (theta[1] * x) for x in DatasetUtil.normalize_data(X)[0]]
         else:
             Y = [theta[0] + (theta[1] * x) for x in X]
         if self.lines == None:
