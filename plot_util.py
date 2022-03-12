@@ -11,6 +11,10 @@ class PlotUtil():
             raise Exception('This class is a Singleton!')
         self.fig , self.ax = plt.subplots(1, 2, figsize=[10, 4.8]) 
         self.ax[0].set(xlim=(-120, 120), ylim=(-250, 250))
+        
+        self.ax[1].set_xlabel('iterations')
+        self.ax[1].set_ylabel('cost')
+        
         self.lines = None    
         self.fig.show()
         PlotUtil.__instance = self
@@ -25,13 +29,8 @@ class PlotUtil():
         self.ax[0].scatter(X, Y, s=9,  c='k')
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
-    
-    def animate_line(self, thetas: list, normalized=False):
-        for theta in thetas:
-            self.__plot_line(theta, normalized)
 
-
-    def __plot_line(self, theta: list, normalized: bool):
+    def plot_line(self, theta: list, normalized: bool):
         X = [-100, 100]
         if normalized:
             Y = [theta[0] + (theta[1] * x) for x in DatasetUtil.normalize_data(X)]
@@ -43,9 +42,9 @@ class PlotUtil():
         self.fig.canvas.draw_idle()
         self.fig.canvas.flush_events()
         
-    def plot_cost(self, costs: list):
-        self.ax[1].set_xlabel('iterations')
-        self.ax[1].set_ylabel('cost')
-        self.ax[1].plot([x+1 for x in range(len(costs))],costs)
+    def plot_cost(self, x: list, costs: list):
+        
+        self.ax[1].plot(x, costs, c='b')
         self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
         

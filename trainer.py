@@ -1,14 +1,12 @@
 import tensorflow as tf
-from plot_util import PlotUtil
-import matplotlib.pyplot as plt
 
 class Trainer:
     
-    def __init__(self, X: tf.Tensor, Y: tf.Tensor, initial_theta: tf.Variable, callback):
+    def __init__(self, X: tf.Tensor, Y: tf.Tensor, initial_theta: tf.Variable):
         self.X = X
         self.Y = Y
         self.theta = initial_theta
-        self.callback = callback
+
     @staticmethod
     def normal_equation(X, Y):
         return tf.matmul(tf.matmul(tf.linalg.inv(tf.matmul(tf.transpose(X), X)), tf.transpose(X)), Y)
@@ -20,7 +18,7 @@ class Trainer:
             derivative = (1/m) * tf.matmul(tf.transpose(self.X), (h_theta - self.Y))
             self.theta.assign_sub(alpha * derivative)
             
-            self.callback(self.X, self.Y, self.theta)    
+            yield self.theta
     
     @staticmethod    
     def cost_function(X: tf.Tensor, Y: tf.Tensor, theta: tf.Tensor):

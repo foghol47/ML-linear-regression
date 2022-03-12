@@ -4,15 +4,22 @@ from plot_util import PlotUtil
 from trainer import Trainer
 import matplotlib.pyplot as plt
 
-costs = list()
-thetas = list()
+costs = list() 
+x_points = list() 
 
-
-def add(X: tf.Tensor, Y: tf.Tensor, theta: tf.Tensor):
-    thetas.append(theta.numpy())
+def plot_function(X: tf.Tensor, Y: tf.Tensor, theta: tf.Tensor, iter_number: int):
+    plot = PlotUtil.get_instance()
+    plot.plot_line(theta.numpy(), True)
     
     cost = Trainer.cost_function(X, Y, theta)
     costs.append(cost)
+    x_points.append(iter_number)
+    
+    if len(costs) == 2:
+        plot.plot_cost(x_points, costs)
+        del costs[0]
+        del x_points[0]
+        
 
 
 def main():
@@ -26,12 +33,13 @@ def main():
     X = tf.concat([tf.ones([m, 1], dtype='float32'), X], axis=1)
     Y = tf.constant(tf.constant(Y, shape=[m,1]))
     theta = tf.Variable((tf.random.uniform((n+1, 1))))
-    trainer = Trainer(X, Y, theta, add)
+    trainer = Trainer(X, Y, theta)
+    
+    iter_number = 1
+    for theta in trainer.train(150, 3e-1):
+        plot_function(X, Y, theta, iter_number)
+        iter_number += 1
 
-    trainer.train(150, 3e-1)
-
-    plot.animate_line(thetas, True)
-    plot.plot_cost(costs)
     plt.show()
         
 if __name__ == '__main__':
