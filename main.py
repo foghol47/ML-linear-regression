@@ -40,7 +40,7 @@ def main():
         plot_function(X, Y, theta, iter_number)
         iter_number += 1
     
-    x = int(input('enter your x:\n'))
+    x = float(input('enter your x:\n'))
     new_x = DatasetUtil.normalize_with_parameters(x, minimum, range_of_data)
     new_x = tf.concat([tf.ones([1, 1], dtype='float32'), tf.constant(new_x, shape=[1,n])], axis=1)
     predict = trainer.h_theta(new_x, theta)
